@@ -1,0 +1,183 @@
+{
+    "gender_mapping": {
+        "Male": 0,
+        "Female": 1,
+        "Unknown": 2
+    },
+    "education_mapping": {
+        "High School": 0,
+        "Graduate": 1,
+        "Post Graduate": 2,
+        "Doctorate": 3
+    },
+    "income_mapping": {
+        "Low Income": 0,
+        "Medium Income": 1,
+        "High Income": 2,
+        "Very High Income": 3
+    },
+    "employment_stability_mapping": {
+        "New Employee": 0,
+        "Experienced Employee": 1,
+        "Highly Experienced Employee": 2
+    },
+    "credit_score_mapping": {
+        "Poor": 0,
+        "Fair": 1,
+        "Good": 2,
+        "Very Good": 3
+    },
+    "debt_burden_mapping": {
+        "Low Risk": 0,
+        "Moderate Risk": 1,
+        "High Risk": 2
+    },
+    "late_payment_mapping": {
+        "No Delay": 0,
+        "Few Delays": 1,
+        "Frequent Delays": 2
+    },
+    "loan_amount_mapping": {
+        "Small Loan": 0,
+        "Medium Loan": 1,
+        "Large Loan": 2
+    },
+    "interest_rate_mapping": {
+        "Low Interest": 0,
+        "Medium Interest": 1,
+        "High Interest": 2
+    },
+    "marital_status_categories": [
+        "Divorced",
+        "Married",
+        "Single",
+        "Unknown",
+        "Widowed"
+    ],
+    "employment_type_categories": [
+        "Business Owner",
+        "Salaried",
+        "Self-Employed",
+        "Unemployed"
+    ],
+    "loan_purpose_frequency": {
+        "Debt Consolidation": 0.1691,
+        "Business": 0.152,
+        "Home Renovation": 0.146,
+        "Education": 0.1218,
+        "Medical": 0.1159,
+        "Other": 0.1056,
+        "Wedding": 0.1002,
+        "Travel": 0.0795,
+        "Unknown": 0.0099
+    },
+    "age_bins": [
+        17,
+        30,
+        45,
+        60,
+        "inf"
+    ],
+    "income_quantiles": [
+        25775.0,
+        38400.0,
+        57000.0
+    ],
+    "selected_features": [
+        "Age",
+        "Dependents",
+        "Years_of_Employment",
+        "Monthly_Income",
+        "Loan_Amount",
+        "Loan_Term",
+        "Interest_Rate",
+        "Monthly_EMI",
+        "Debt_to_Income_Ratio",
+        "Credit_Score",
+        "Number_of_Late_Payments",
+        "Annual_Income",
+        "Loan_To_Income_Ratio",
+        "EMI_To_Income_Ratio",
+        "Disposable_Income",
+        "Existing_Loan_Flag",
+        "Previous_Default_Flag",
+        "Gender_Encoded",
+        "Marital_Status_Divorced",
+        "Marital_Status_Married",
+        "Marital_Status_Single",
+        "Marital_Status_Unknown",
+        "Marital_Status_Widowed",
+        "Education_Encoder",
+        "Employment_Type_Business Owner",
+        "Employment_Type_Salaried",
+        "Employment_Type_Self-Employed",
+        "Employment_Type_Unemployed",
+        "Loan_Purpose_Frequency",
+        "Age_group_Encoded",
+        "Income_Category_Encoded",
+        "Employment_Stability_Encoded",
+        "Credit_Score_Category_Encoded",
+        "Debt_Burdon_Category_Encoded",
+        "Late_Payment_Category_Encoded",
+        "Loan_Amount_Category_Encoded",
+        "Interest_Rate_Category_Encoded"
+    ],
+    "age_group_mapping": {
+        "Young": 0,
+        "Adult": 1,
+        "Middle": 2,
+        "Senior": 3
+    },
+    "existing_loan_mapping": {
+        "Yes": 1,
+        "No": 0
+    },
+    "previous_default_mapping": {
+        "Yes": 1,
+        "No": 0
+    },
+    "category_rules": {
+        "employment_stability": {
+            "new_employee_max": 2,
+            "experienced_employee_max": 5
+        },
+        "credit_score": {
+            "poor": [
+                300,
+                549
+            ],
+            "fair": [
+                550,
+                649
+            ],
+            "good": [
+                650,
+                749
+            ],
+            "very_good": [
+                750,
+                799
+            ],
+            "excellent": [
+                800,
+                900
+            ]
+        },
+        "debt_burden": {
+            "low_risk_max": 0.35,
+            "moderate_risk_max": 0.5
+        },
+        "late_payment": {
+            "no_delay": 0,
+            "few_delays_max": 3
+        },
+        "loan_amount": {
+            "small_max": 207670.0,
+            "medium_max": 413000.0
+        },
+        "interest_rate": {
+            "low_max": 15,
+            "medium_max": 20
+        }
+    }
+}

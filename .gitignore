@@ -1,0 +1,25 @@
+# Virtual environment
+.pl_loan/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# Word documents
+*.docx
+
+# OS files
+.DS_Store
+Thumbs.db
+
+
+anaconda_projects/
