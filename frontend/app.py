@@ -1,68 +1,300 @@
 import streamlit as st
 import requests
+from textwrap import dedent
 
 st.set_page_config(
-    page_title="Loan Approval Prediction",
+    page_title="Loan Approval AI",
     page_icon="🏦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-with st.sidebar:
-    st.header("🏦 Loan Approval System")
+# ============================================================
+# CUSTOM UI STYLE
+# ============================================================
 
-    st.write(
-        "This application uses a machine learning model "
-        "to predict loan approval."
-    )
-
-    st.divider()
-
-    st.subheader("System")
-    st.write("• Machine Learning")
-    st.write("• FastAPI Backend")
-    st.write("• Streamlit Frontend")
-
-    st.divider()
-
-    st.caption("Loan Approval Prediction System")
-
-st.markdown("""
+st.markdown(
+    """
 <style>
 
-.main-title {
-    font-size: 40px;
-    font-weight: 700;
-    text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Main background */
+.stApp {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+/* Hide Streamlit default menu/footer */
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #111827 0%, #1e293b 100%);
+}
+
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+.sidebar-title {
+    font-size: 24px;
+    font-weight: 800;
     margin-bottom: 5px;
 }
 
-.subtitle {
+.sidebar-subtitle {
+    font-size: 13px;
+    color: #cbd5e1 !important;
+    line-height: 1.6;
+}
+
+/* Main hero */
+.hero {
+    padding: 35px 20px 25px 20px;
     text-align: center;
-    color: #666666;
-    margin-bottom: 30px;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 7px 16px;
+    border-radius: 30px;
+    background: #e0e7ff;
+    color: #4338ca;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.hero-title {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: #111827;
+    margin: 0;
+}
+
+.hero-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    margin-top: 10px;
+}
+
+/* Section headers */
+.section-header {
+    margin-top: 25px;
+    margin-bottom: 12px;
 }
 
 .section-title {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 22px;
+    font-weight: 750;
+    color: #111827;
+    margin-bottom: 3px;
+}
+
+.section-description {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* Input labels */
+label {
+    font-weight: 600 !important;
+}
+
+/* Input boxes */
+div[data-baseweb="input"] {
+    border-radius: 10px;
+}
+
+div[data-baseweb="select"] > div {
+    border-radius: 10px;
+}
+
+/* Button */
+.stButton > button {
+    width: 100%;
+    border-radius: 12px;
+    height: 52px;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    color: white;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+    transition: all 0.2s ease;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(79, 70, 229, 0.35);
+}
+
+/* Result cards */
+.result-card {
     margin-top: 25px;
+    padding: 30px;
+    border-radius: 20px;
+    background: white;
+    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.10);
+    text-align: center;
+}
+
+.result-approved {
+    border: 2px solid #22c55e;
+}
+
+.result-rejected {
+    border: 2px solid #ef4444;
+}
+
+.result-status {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.result-probability {
+    font-size: 48px;
+    font-weight: 800;
+    color: #4f46e5;
+}
+
+.result-label {
+    font-size: 14px;
+    color: #64748b;
     margin-bottom: 15px;
+}
+
+/* Metrics */
+div[data-testid="stMetric"] {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+}
+
+/* Divider */
+hr {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+/* Small info cards */
+.info-card {
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    margin-top: 12px;
+}
+
+.info-title {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.info-text {
+    font-size: 12px;
+    color: #cbd5e1 !important;
+    margin-top: 4px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    '<div class="main-title">🏦 Loan Approval Prediction System</div>',
-    unsafe_allow_html=True
+
+# ============================================================
+# SIDEBAR
+# ============================================================
+
+with st.sidebar:
+
+    st.markdown(
+        '<div class="sidebar-title">🏦 Loan AI</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="sidebar-subtitle">'
+        'Intelligent Loan Approval System'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.divider()
+
+    st.markdown(
+        '<div class="info-card">'
+        '<div class="info-title">🤖 Machine Learning</div>'
+        '<div class="info-text">Predicts loan approval using a trained ML model.</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="info-card">'
+        '<div class="info-title">⚡ FastAPI Backend</div>'
+        '<div class="info-text">Handles prediction requests and validation.</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="info-card">'
+        '<div class="info-title">🗄️ MySQL Database</div>'
+        '<div class="info-text">Stores submitted loan applications and predictions.</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.divider()
+
+    st.caption("Loan Approval Prediction System")
+
+
+# ============================================================
+# HERO SECTION
+# ============================================================
+
+st.markdown("### ✨ AI POWERED LOAN ASSESSMENT")
+
+st.title("🏦 Loan Approval System")
+
+st.write(
+    "Enter applicant details and let our machine learning model "
+    "evaluate the loan application."
 )
 
-st.markdown(
-    '<div class="subtitle">Enter applicant details to predict loan approval</div>',
-    unsafe_allow_html=True
-)
+st.divider()
 
-st.header("Applicant Information")
+
+# ============================================================
+# APPLICANT INFORMATION
+# ============================================================
+
+st.markdown(
+    """
+<div class="section-header">
+    <div class="section-title">👤 Applicant Information</div>
+    <div class="section-description">
+        Basic information about the loan applicant
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
@@ -101,8 +333,21 @@ with col5:
         "Education",
         ["High School", "Graduate", "Post Graduate", "Doctorate"]
     )
-    
-st.header("Employment & Income")
+
+
+# ============================================================
+# EMPLOYMENT & INCOME
+# ============================================================
+
+st.markdown(
+    """
+<div class="section-header">
+    <div class="section-title">💼 Employment & Income</div>
+    <div class="section-description">
+        Employment and financial information
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
@@ -133,8 +378,21 @@ with col3:
         value=50000.0,
         step=1000.0
     )
-    
-st.header("Loan Details")
+
+
+# ============================================================
+# LOAN DETAILS
+# ============================================================
+
+st.markdown(
+    """
+<div class="section-header">
+    <div class="section-title">🏦 Loan Details</div>
+    <div class="section-description">
+        Information about the requested loan
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
@@ -193,8 +451,21 @@ with col6:
         value=10000.0,
         step=500.0
     )
-    
-st.header("Credit & Risk")
+
+
+# ============================================================
+# CREDIT & RISK
+# ============================================================
+
+st.markdown(
+    """
+<div class="section-header">
+    <div class="section-title">🛡️ Credit & Risk</div>
+    <div class="section-description">
+        Credit history and financial risk information
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 
@@ -226,13 +497,23 @@ number_of_late_payments = st.number_input(
     value=1
 )
 
+
+# ============================================================
+# PREDICTION BUTTON
+# ============================================================
+
 st.divider()
 
 predict_button = st.button(
-    "Predict Loan Approval",
+    "✨  Predict Loan Approval",
     type="primary",
     use_container_width=True
 )
+
+
+# ============================================================
+# PREDICTION LOGIC
+# ============================================================
 
 if predict_button:
 
@@ -272,11 +553,14 @@ if predict_button:
             loan_status = result["loan_status"]
             approval_probability = result["approval_probability"]
 
+            # ------------------------------------------------
+            # RESULT
+            # ------------------------------------------------
+
             st.divider()
-            st.subheader("Loan Decision")
 
             if loan_status == "Approved":
-                st.success("✅ Loan Approved")
+                st.success("🎉 Loan Approved")
             else:
                 st.error("❌ Loan Rejected")
 
@@ -299,12 +583,15 @@ if predict_button:
             )
 
         else:
+
             error_data = response.json()
 
             st.error("Invalid loan application details.")
 
             if "detail" in error_data:
+
                 for error in error_data["detail"]:
+
                     field = error["loc"][-1]
                     message = error["msg"]
 
@@ -313,6 +600,7 @@ if predict_button:
                     )
 
     except requests.exceptions.RequestException:
+
         st.error(
             "Unable to connect to the Loan Approval API. "
             "Please make sure the FastAPI server is running."
