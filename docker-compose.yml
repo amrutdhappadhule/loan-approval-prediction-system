@@ -1,0 +1,21 @@
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: loan-api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: loan-frontend
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api

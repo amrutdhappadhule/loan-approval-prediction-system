@@ -541,7 +541,8 @@ if predict_button:
     try:
 
         response = requests.post(
-            "http://127.0.0.1:8000/predict",
+            # "http://127.0.0.1:8000/predict",
+            "http://api:8000/predict",
             json=data,
             timeout=10
         )
